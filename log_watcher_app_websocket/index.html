@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Live Data Stream (WebSocket Secure)</title>
+</head>
+<body>
+  <h1>Live Data Stream</h1>
+  <div id="data"></div>
+
+  <script>
+    const socket = new WebSocket((location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host);
+
+    const dataDiv = document.getElementById('data');
+
+    socket.onmessage = function(event) {
+      const p = document.createElement('p');
+      p.textContent = event.data;
+      dataDiv.appendChild(p);
+      window.scrollTo(0, document.body.scrollHeight);
+    };
+
+    socket.onopen = function() {
+      console.log('Connected to server via WebSocket');
+    };
+
+    socket.onerror = function(error) {
+      console.error('WebSocket Error:', error);
+    };
+
+    socket.onclose = function() {
+      console.log('Disconnected from server');
+    };
+  </script>
+</body>
+</html>

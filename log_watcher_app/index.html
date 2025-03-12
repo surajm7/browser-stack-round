@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Live Logs</title>
+</head>
+<body>
+
+<h1>Live Log Stream</h1>
+<div id="logContainer"></div>
+
+<script>
+  const logContainer = document.getElementById('logContainer');
+
+  const evtSource = new EventSource('/log'); // Connect to /log SSE endpoint
+
+  evtSource.onmessage = function(event) {
+    const message = event.data;
+    console.log('New log:', message);
+
+    const newLog = document.createElement('div');
+    newLog.textContent = message;
+    logContainer.appendChild(newLog);
+  };
+
+  evtSource.onerror = function(err) {
+    console.error("EventSource error:", err);
+    const errorMsg = document.createElement('div');
+    errorMsg.textContent = 'Connection lost. Trying to reconnect...';
+    logContainer.appendChild(errorMsg);
+  };
+</script>
+
+</body>
+</html>
